@@ -1,0 +1,2 @@
+class Analizer:
+    pass

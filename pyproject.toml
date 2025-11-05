@@ -1,0 +1,7 @@
+[project]
+name = "aids"
+version = "0.1.0"
+description = "El analizador inteligente de datos simples."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
