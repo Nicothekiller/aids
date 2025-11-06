@@ -12,6 +12,6 @@ class Analizer:
 
 
 if __name__ == "__main__":
-    test = Analizer.from_csv("./test_data.csv")
+    test = Analizer.from_csv("./.data/test_data.csv")
 
     print(test.data.mean())

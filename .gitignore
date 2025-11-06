@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# for saving the data
+.data/
