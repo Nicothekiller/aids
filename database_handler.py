@@ -74,7 +74,7 @@ class DatabaseHandler:
 
 
 if __name__ == "__main__":
-    test = DatabaseHandler(False)
+    test = DatabaseHandler()
     with test._engine.connect() as conn:
         # _ = conn.execute(insert(Dataset).values(file_name="test1", file_route="test2"))
         # conn.commit()
