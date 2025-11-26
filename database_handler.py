@@ -24,8 +24,10 @@ class Dataset(Base):
 
     __tablename__: str = "datasets"
 
-    # Uso de Mapped[] y mapped_column()
     id: Mapped[int] = mapped_column(sql.Integer, primary_key=True)
+
+    # nombre del dataset, no del archivo
+    # (ej: usario quiere que se identifique el dataset como "survey answers", con un archivo survey.csv)
     file_name: Mapped[str] = mapped_column(sql.String(255), nullable=False)
     # Ruta absoluta o relativa al archivo en el sistema de archivos del servidor
     file_route: Mapped[str] = mapped_column(sql.String, nullable=False, unique=True)
@@ -39,7 +41,7 @@ class Dataset(Base):
         return f"<Dataset(id={self.id}, nombre='{self.file_name}', path='{self.file_route}')>"
 
 
-class AnalisisCache(Base):
+class CacheTable(Base):
     """
     Modelo del ORM para almacenar resultados de operaciones.
 
@@ -52,7 +54,10 @@ class AnalisisCache(Base):
 
     id: Mapped[int] = mapped_column(sql.Integer, primary_key=True)
 
-    # clave del cache
+    # id del archivo en la otra tabla
+    file_id: Mapped[int] = mapped_column(sql.Integer, nullable=False)
+
+    # clave del cache con formato id:operation_name
     cache_key: Mapped[str] = mapped_column(sql.Text, nullable=False, unique=True)
 
     result: Mapped[str] = mapped_column(sql.Text, nullable=False)
@@ -62,7 +67,7 @@ class AnalisisCache(Base):
 
     @override
     def __repr__(self):
-        return f"<Cache(key='{self.cache_key}')>"
+        return f"<Cache(key='{self.cache_key}', result={self.result})>"
 
 
 class DatabaseHandler:
@@ -72,10 +77,24 @@ class DatabaseHandler:
         )
         Base.metadata.create_all(self._engine)
 
+    def get_file_route(self, id: int) -> str:
+        """
+        Funcion para obtener un archivo basado en su id de la base de datos.
+        """
+
+        with self._engine.connect() as conn:
+            res = conn.execute(
+                select(Dataset.file_route).where(Dataset.id == id)
+            ).first()
+            if res:
+                return res[0]  # pyright: ignore[reportAny]
+            else:
+                raise Exception(f"El id {id} no existe en la base de datos.")
+
 
 if __name__ == "__main__":
-    test = DatabaseHandler()
-    with test._engine.connect() as conn:
+    test = DatabaseHandler(True)
+    with test._engine.connect() as conn:  # pyright: ignore[reportPrivateUsage]
         # _ = conn.execute(insert(Dataset).values(file_name="test1", file_route="test2"))
         # conn.commit()
         res = conn.execute(select("*").select_from(Dataset)).fetchall()
