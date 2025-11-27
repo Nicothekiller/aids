@@ -5,8 +5,13 @@ description = "El analizador inteligente de datos simples."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "grpcio-tools>=1.76.0",
     "numpy>=2.3.4",
     "pandas>=2.3.3",
     "pandas-stubs>=2.3.2.250926",
+    "ruff>=0.14.6",
     "sqlalchemy>=2.0.44",
 ]
+
+[tool.ruff]
+exclude = ["*_pb2.py", "*_pb2.pyi", "*_pb2_grpc.py"]

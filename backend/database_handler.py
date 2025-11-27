@@ -27,8 +27,6 @@ class Dataset(Base):
 
     id: Mapped[int] = mapped_column(sql.Integer, primary_key=True)
 
-    # nombre del dataset, no del archivo
-    # (ej: usario quiere que se identifique el dataset como "survey answers", con un archivo survey.csv)
     file_name: Mapped[str] = mapped_column(sql.String(255), nullable=False)
 
     # Ruta absoluta o relativa al archivo en el sistema de archivos del servidor
@@ -75,8 +73,10 @@ class CacheTable(Base):
 
 class DatabaseHandler:
     def __init__(self, should_echo: bool = False) -> None:
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_path = os.path.join(project_root, ".data", "database.db")
         self._engine: sql.Engine = sql.create_engine(
-            f"sqlite:///{os.getcwd()}/.data/database.db", echo=should_echo
+            f"sqlite:///{db_path}", echo=should_echo
         )
         Base.metadata.create_all(self._engine)
 
@@ -101,9 +101,21 @@ class DatabaseHandler:
         y el nombre/tag que el usuario dio al archivo. (no el nombre del archivo en el disco)
         """
         with Session(self._engine) as session:
-            res = session.execute(select(Dataset.id, Dataset.file_name)).all()
+            res = session.execute(
+                select(Dataset.id, Dataset.file_name, Dataset.date)
+            ).all()
 
             return res
+
+    def add_dataset(self, dataset: Dataset) -> int:
+        """
+        Añade un nuevo dataset a la base de datos y devuelve su ID.
+        """
+        with Session(self._engine) as session:
+            session.add(dataset)
+            session.commit()
+            session.refresh(dataset)  # Refresh to get the ID assigned by the DB
+            return dataset.id
 
     def remove_datset(self, id: int):
         """
@@ -143,15 +155,34 @@ class DatabaseHandler:
             tup = res.one_or_none()
 
             if tup:
-                return tup.cache_key  # pyright: ignore[reportAny]
+                return tup.result  # pyright: ignore[reportAny]
             if tup is None:
                 return tup
+
+    def save_csv_file(self, file_content: bytes, original_file_name: str) -> str:
+        """
+        Guarda el contenido de un archivo CSV en el directorio .data/ y devuelve su ruta absoluta.
+        Genera un nombre de archivo único para evitar colisiones.
+        """
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        data_dir = os.path.join(project_root, ".data")
+        os.makedirs(data_dir, exist_ok=True)  # Asegura que el directorio .data exista
+
+        # Generar un nombre de archivo único
+        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+        base_name, ext = os.path.splitext(original_file_name)
+        unique_file_name = f"{base_name}_{timestamp}{ext}"
+
+        file_path = os.path.join(data_dir, unique_file_name)
+
+        with open(file_path, "wb") as f:
+            f.write(file_content)
+
+        return file_path
 
 
 if __name__ == "__main__":
     test = DatabaseHandler(True)
     with test._engine.connect() as conn:  # pyright: ignore[reportPrivateUsage]
-        # _ = conn.execute(insert(Dataset).values(file_name="test1", file_route="test2"))
-        # conn.commit()
         res = conn.execute(select("*").select_from(Dataset)).fetchall()
         print(f"Result: {res}")

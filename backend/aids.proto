@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+// Mensaje para enviar trozos (chunks) del archivo CSV
+message Chunk {
+  bytes content = 1;
+  string file_name = 2; // Solo se usará en el primer chunk para el nombre del archivo
+}
+
+// Respuesta después de subir un archivo CSV
+message UploadResponse {
+  int64 id = 1; // ID del dataset guardado en la base de datos
+  string message = 2; // Mensaje de confirmación
+}
+
+// Solicitud para obtener el resumen de un dataset
+message DatasetRequest {
+  int64 id = 1; // ID del dataset
+}
+
+// Respuesta con el resumen del dataset
+message SummaryResponse {
+  string summary_data = 1; // El resumen de pandas.describe() en formato string (ej. JSON)
+}
+
+// Información de un dataset guardado
+message DatasetInfo {
+  int64 id = 1; // ID del dataset
+  string name = 2; // Nombre original del archivo
+  string created_at = 3; // Fecha de creación (ej. "YYYY-MM-DD HH:MM:SS")
+}
+
+// Respuesta con la lista de datasets guardados
+message DatasetListResponse {
+  repeated DatasetInfo datasets = 1;
+}
+
+// Servicio gRPC para el análisis de datos
+service AidsService {
+  // Sube un archivo CSV en streaming
+  rpc UploadCsv (stream Chunk) returns (UploadResponse);
+
+  // Obtiene el resumen de un dataset por su ID
+  rpc GetDatasetSummary (DatasetRequest) returns (SummaryResponse);
+
+  // Obtiene la lista de todos los datasets guardados
+  rpc ListSavedDatasets (google.protobuf.Empty) returns (DatasetListResponse);
+}
