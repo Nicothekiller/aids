@@ -1,0 +1,27 @@
+services:
+  aids-backend:
+    build:
+      context: ./backend
+    image: aids-backend
+    networks:
+      - aids-network
+
+  aids-frontend:
+    build:
+      context: ./aids-frontend
+    image: aids-frontend
+    networks:
+      - aids-network
+
+  aids-envoy:
+    image: envoyproxy/envoy:v1.29-latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    networks:
+      - aids-network
+
+networks:
+  aids-network:
+    driver: bridge

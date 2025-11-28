@@ -19,6 +19,7 @@
 		"@protobuf-ts/plugin": "^2.11.1",
 		"@protobuf-ts/runtime": "^2.11.1",
 		"@protobuf-ts/runtime-rpc": "^2.11.1",
+		"@sveltejs/adapter-static": "^3.0.10",
 		"protoc": "^33.1.0",
 		"rxjs": "^7.8.2"
 	},

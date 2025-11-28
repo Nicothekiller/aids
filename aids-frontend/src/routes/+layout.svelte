@@ -15,7 +15,7 @@
 			return;
 		}
 
-		if (!file.name.endsWith('.csv')) {
+		if (file.name && !file.name.endsWith('.csv')) {
 			return;
 		}
 

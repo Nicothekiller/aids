@@ -75,6 +75,8 @@ class DatabaseHandler:
     def __init__(self, should_echo: bool = False) -> None:
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         db_path = os.path.join(project_root, ".data", "database.db")
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+
         self._engine: sql.Engine = sql.create_engine(
             f"sqlite:///{db_path}", echo=should_echo
         )

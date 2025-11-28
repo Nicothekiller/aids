@@ -11,9 +11,11 @@ import {
 } from './protos/aids';
 import { Empty } from './protos/google/protobuf/empty';
 
+import { browser } from '$app/environment';
+
 // Define the RPC client
 const transport = new GrpcWebFetchTransport({
-	baseUrl: 'http://127.0.0.1:8080'
+	baseUrl: browser ? window.location.origin : ''
 });
 
 // Instantiate the gRPC client
