@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PATH="$HOME/go/bin:$PATH" grpcwebproxy \
+--backend_addr=localhost:50051 \
+--run_http_server=true \
+--allow_all_origins=true \
+--allowed_headers="DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,X-Grpc-Web,Grpc-Metadata-X-Custom-Header" \
+--run_tls_server=false

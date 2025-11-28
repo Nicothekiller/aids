@@ -1,4 +1,3 @@
-from collections.abc import Iterator
 from typing import override
 import aids_pb2
 import aids_pb2_grpc
@@ -17,17 +16,13 @@ class AidsServiceServicer(aids_pb2_grpc.AidsServiceServicer):
 
     @override
     def UploadCsv(
-        self, request_iterator: Iterator[aids_pb2.Chunk], context: grpc.ServicerContext
+        self, request: aids_pb2.Chunk, context: grpc.ServicerContext
     ) -> aids_pb2.UploadResponse:
         """
         Streams a CSV into the server.
         """
-        file_content = b""
-        file_name = ""
-        for chunk in request_iterator:
-            if chunk.file_name:
-                file_name = chunk.file_name
-            file_content += chunk.content
+        file_content = request.content
+        file_name = request.file_name
 
         if not file_name:
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)

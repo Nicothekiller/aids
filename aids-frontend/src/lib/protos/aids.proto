@@ -5,7 +5,7 @@ import "google/protobuf/empty.proto";
 // Mensaje para enviar trozos (chunks) del archivo CSV
 message Chunk {
   bytes content = 1;
-  string file_name = 2; // Solo se usará en el primer chunk para el nombre del archivo
+  string file_name = 2;
 }
 
 // Respuesta después de subir un archivo CSV

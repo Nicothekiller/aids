@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\naids.proto\x1a\x1bgoogle/protobuf/empty.proto\"+\n\x05\x43hunk\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\"-\n\x0eUploadResponse\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x1c\n\x0e\x44\x61tasetRequest\x12\n\n\x02id\x18\x01 \x01(\x03\"\'\n\x0fSummaryResponse\x12\x14\n\x0csummary_data\x18\x01 \x01(\t\";\n\x0b\x44\x61tasetInfo\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\ncreated_at\x18\x03 \x01(\t\"5\n\x13\x44\x61tasetListResponse\x12\x1e\n\x08\x64\x61tasets\x18\x01 \x03(\x0b\x32\x0c.DatasetInfo2\xb0\x01\n\x0b\x41idsService\x12&\n\tUploadCsv\x12\x06.Chunk\x1a\x0f.UploadResponse(\x01\x12\x36\n\x11GetDatasetSummary\x12\x0f.DatasetRequest\x1a\x10.SummaryResponse\x12\x41\n\x11ListSavedDatasets\x12\x16.google.protobuf.Empty\x1a\x14.DatasetListResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\naids.proto\x1a\x1bgoogle/protobuf/empty.proto\"+\n\x05\x43hunk\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\"-\n\x0eUploadResponse\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x1c\n\x0e\x44\x61tasetRequest\x12\n\n\x02id\x18\x01 \x01(\x03\"\'\n\x0fSummaryResponse\x12\x14\n\x0csummary_data\x18\x01 \x01(\t\";\n\x0b\x44\x61tasetInfo\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\ncreated_at\x18\x03 \x01(\t\"5\n\x13\x44\x61tasetListResponse\x12\x1e\n\x08\x64\x61tasets\x18\x01 \x03(\x0b\x32\x0c.DatasetInfo2\xae\x01\n\x0b\x41idsService\x12$\n\tUploadCsv\x12\x06.Chunk\x1a\x0f.UploadResponse\x12\x36\n\x11GetDatasetSummary\x12\x0f.DatasetRequest\x1a\x10.SummaryResponse\x12\x41\n\x11ListSavedDatasets\x12\x16.google.protobuf.Empty\x1a\x14.DatasetListResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -45,5 +45,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_DATASETLISTRESPONSE']._serialized_start=267
   _globals['_DATASETLISTRESPONSE']._serialized_end=320
   _globals['_AIDSSERVICE']._serialized_start=323
-  _globals['_AIDSSERVICE']._serialized_end=499
+  _globals['_AIDSSERVICE']._serialized_end=497
 # @@protoc_insertion_point(module_scope)

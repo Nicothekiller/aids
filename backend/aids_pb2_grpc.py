@@ -36,7 +36,7 @@ class AidsServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.UploadCsv = channel.stream_unary(
+        self.UploadCsv = channel.unary_unary(
                 '/AidsService/UploadCsv',
                 request_serializer=aids__pb2.Chunk.SerializeToString,
                 response_deserializer=aids__pb2.UploadResponse.FromString,
@@ -57,7 +57,7 @@ class AidsServiceServicer(object):
     """Servicio gRPC para el análisis de datos
     """
 
-    def UploadCsv(self, request_iterator, context):
+    def UploadCsv(self, request, context):
         """Sube un archivo CSV en streaming
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -81,7 +81,7 @@ class AidsServiceServicer(object):
 
 def add_AidsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'UploadCsv': grpc.stream_unary_rpc_method_handler(
+            'UploadCsv': grpc.unary_unary_rpc_method_handler(
                     servicer.UploadCsv,
                     request_deserializer=aids__pb2.Chunk.FromString,
                     response_serializer=aids__pb2.UploadResponse.SerializeToString,
@@ -109,7 +109,7 @@ class AidsService(object):
     """
 
     @staticmethod
-    def UploadCsv(request_iterator,
+    def UploadCsv(request,
             target,
             options=(),
             channel_credentials=None,
@@ -119,8 +119,8 @@ class AidsService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_unary(
-            request_iterator,
+        return grpc.experimental.unary_unary(
+            request,
             target,
             '/AidsService/UploadCsv',
             aids__pb2.Chunk.SerializeToString,
