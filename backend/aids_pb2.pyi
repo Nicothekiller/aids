@@ -50,3 +50,19 @@ class DatasetListResponse(_message.Message):
     DATASETS_FIELD_NUMBER: _ClassVar[int]
     datasets: _containers.RepeatedCompositeFieldContainer[DatasetInfo]
     def __init__(self, datasets: _Optional[_Iterable[_Union[DatasetInfo, _Mapping]]] = ...) -> None: ...
+
+class ChartRequest(_message.Message):
+    __slots__ = ("id", "x_axis", "y_axis")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    X_AXIS_FIELD_NUMBER: _ClassVar[int]
+    Y_AXIS_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    x_axis: str
+    y_axis: str
+    def __init__(self, id: _Optional[int] = ..., x_axis: _Optional[str] = ..., y_axis: _Optional[str] = ...) -> None: ...
+
+class ChartResponse(_message.Message):
+    __slots__ = ("svg",)
+    SVG_FIELD_NUMBER: _ClassVar[int]
+    svg: str
+    def __init__(self, svg: _Optional[str] = ...) -> None: ...

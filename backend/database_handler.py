@@ -32,9 +32,7 @@ class Dataset(Base):
     # Ruta absoluta o relativa al archivo en el sistema de archivos del servidor
     file_route: Mapped[str] = mapped_column(sql.String, nullable=False, unique=True)
     file_type: Mapped[str] = mapped_column(sql.String(10), default="CSV")
-    date: Mapped[datetime.datetime] = mapped_column(
-        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
-    )
+    date: Mapped[datetime.datetime] = mapped_column(DateTime)
 
     @override
     def __repr__(self):
@@ -62,9 +60,7 @@ class CacheTable(Base):
     cache_key: Mapped[str] = mapped_column(sql.Text, nullable=False, unique=True)
 
     result: Mapped[str] = mapped_column(sql.Text, nullable=False)
-    date: Mapped[datetime.datetime] = mapped_column(
-        DateTime, default=datetime.datetime.now(datetime.timezone.utc)
-    )
+    date: Mapped[datetime.datetime] = mapped_column(DateTime)
 
     @override
     def __repr__(self):
@@ -73,7 +69,7 @@ class CacheTable(Base):
 
 class DatabaseHandler:
     def __init__(self, should_echo: bool = False) -> None:
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        project_root = os.path.dirname(__file__)
         db_path = os.path.join(project_root, ".data", "database.db")
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
@@ -119,7 +115,7 @@ class DatabaseHandler:
             session.refresh(dataset)  # Refresh to get the ID assigned by the DB
             return dataset.id
 
-    def remove_datset(self, id: int):
+    def remove_dataset(self, id: int):
         """
         Funcion para quitar un dataset basado en su id. Tambien invalida el cache.
         """
@@ -128,6 +124,9 @@ class DatabaseHandler:
 
             # also invalidate cache
             _ = session.execute(delete(CacheTable).where(CacheTable.file_id == id))
+
+            # note to self: if using session beyond a select, DONT FORGET TO COMMIT
+            session.commit()
 
     def add_cache(self, file_id: int, operation_name: str, result: str):
         """
@@ -140,8 +139,10 @@ class DatabaseHandler:
                     file_id=file_id,
                     cache_key=f"{file_id}:{operation_name}",
                     result=result,
+                    date=datetime.datetime.now(datetime.timezone.utc),
                 )
             )
+            session.commit()
 
     def get_cache(self, file_id: int, operation_name: str) -> str | None:
         """
@@ -166,11 +167,11 @@ class DatabaseHandler:
         Guarda el contenido de un archivo CSV en el directorio .data/ y devuelve su ruta absoluta.
         Genera un nombre de archivo único para evitar colisiones.
         """
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        project_root = os.path.dirname(__file__)
         data_dir = os.path.join(project_root, ".data")
         os.makedirs(data_dir, exist_ok=True)  # Asegura que el directorio .data exista
 
-        # Generar un nombre de archivo único
+        # nombre de archivo único
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
         base_name, ext = os.path.splitext(original_file_name)
         unique_file_name = f"{base_name}_{timestamp}{ext}"

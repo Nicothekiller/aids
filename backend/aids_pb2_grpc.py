@@ -51,6 +51,21 @@ class AidsServiceStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=aids__pb2.DatasetListResponse.FromString,
                 _registered_method=True)
+        self.DeleteDataset = channel.unary_unary(
+                '/AidsService/DeleteDataset',
+                request_serializer=aids__pb2.DatasetRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+        self.DownloadDataset = channel.unary_unary(
+                '/AidsService/DownloadDataset',
+                request_serializer=aids__pb2.DatasetRequest.SerializeToString,
+                response_deserializer=aids__pb2.Chunk.FromString,
+                _registered_method=True)
+        self.GetChart = channel.unary_unary(
+                '/AidsService/GetChart',
+                request_serializer=aids__pb2.ChartRequest.SerializeToString,
+                response_deserializer=aids__pb2.ChartResponse.FromString,
+                _registered_method=True)
 
 
 class AidsServiceServicer(object):
@@ -78,6 +93,27 @@ class AidsServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DeleteDataset(self, request, context):
+        """Borra un dataset
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DownloadDataset(self, request, context):
+        """Para descargar un dataset
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetChart(self, request, context):
+        """For getting a chart with specific fields
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AidsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -95,6 +131,21 @@ def add_AidsServiceServicer_to_server(servicer, server):
                     servicer.ListSavedDatasets,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=aids__pb2.DatasetListResponse.SerializeToString,
+            ),
+            'DeleteDataset': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteDataset,
+                    request_deserializer=aids__pb2.DatasetRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DownloadDataset': grpc.unary_unary_rpc_method_handler(
+                    servicer.DownloadDataset,
+                    request_deserializer=aids__pb2.DatasetRequest.FromString,
+                    response_serializer=aids__pb2.Chunk.SerializeToString,
+            ),
+            'GetChart': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetChart,
+                    request_deserializer=aids__pb2.ChartRequest.FromString,
+                    response_serializer=aids__pb2.ChartResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -179,6 +230,87 @@ class AidsService(object):
             '/AidsService/ListSavedDatasets',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             aids__pb2.DatasetListResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteDataset(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AidsService/DeleteDataset',
+            aids__pb2.DatasetRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DownloadDataset(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AidsService/DownloadDataset',
+            aids__pb2.DatasetRequest.SerializeToString,
+            aids__pb2.Chunk.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetChart(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/AidsService/GetChart',
+            aids__pb2.ChartRequest.SerializeToString,
+            aids__pb2.ChartResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -7,7 +7,9 @@ import {
 	DatasetListResponse,
 	DatasetRequest,
 	SummaryResponse,
-	UploadResponse
+	UploadResponse,
+	ChartRequest,
+	ChartResponse
 } from './protos/aids';
 import { Empty } from './protos/google/protobuf/empty';
 
@@ -21,6 +23,27 @@ const transport = new GrpcWebFetchTransport({
 // Instantiate the gRPC client
 export const aidsClient = new AidsServiceClient(transport);
 
+// Function to delete a dataset
+export async function deleteDataset(id: bigint): Promise<void> {
+	const request = DatasetRequest.create({ id });
+	await aidsClient.deleteDataset(request);
+}
+
+// Function to download a dataset
+export async function downloadDataset(id: bigint): Promise<Chunk> {
+	const request = DatasetRequest.create({ id });
+	const call = aidsClient.downloadDataset(request);
+	const response = await call.response;
+	return response;
+}
+
+export async function getChart(id: bigint, xAxis: string, yAxis: string): Promise<ChartResponse> {
+	const request = ChartRequest.create({ id, xAxis, yAxis });
+	const call = aidsClient.getChart(request);
+	const response = await call.response;
+	return response;
+}
+
 // Export message types for convenience
 export {
 	Chunk,
@@ -29,5 +52,7 @@ export {
 	SummaryResponse,
 	DatasetInfo,
 	DatasetListResponse,
-	Empty
+	Empty,
+	ChartRequest,
+	ChartResponse
 };

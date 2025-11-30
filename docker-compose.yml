@@ -5,6 +5,8 @@ services:
     image: aids-backend
     networks:
       - aids-network
+    volumes:
+      - db-data:/app/.data
 
   aids-frontend:
     build:
@@ -21,6 +23,10 @@ services:
       - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
     networks:
       - aids-network
+
+
+volumes:
+  db-data:
 
 networks:
   aids-network:

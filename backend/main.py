@@ -5,6 +5,8 @@ import grpc
 import aids_pb2_grpc
 from api import AidsServiceServicer
 
+import logging
+
 
 def serve():
     """Starts the gRPC server and waits for requests."""
@@ -12,10 +14,12 @@ def serve():
     aids_pb2_grpc.add_AidsServiceServicer_to_server(AidsServiceServicer(), server)
     port = server.add_insecure_port("0.0.0.0:50051")
     server.start()
-    print(f"Server started, listening on port {port}")
+
+    logging.info(f"Server started, listening on port {port}")
     server.wait_for_termination()
+    logging.info("Server stopped")
 
 
 if __name__ == "__main__":
+    # logging.basicConfig(level=logging.INFO)
     serve()
-

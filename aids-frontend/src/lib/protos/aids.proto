@@ -2,38 +2,50 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-// Mensaje para enviar trozos (chunks) del archivo CSV
+// Archivo junto con el nombre
 message Chunk {
   bytes content = 1;
   string file_name = 2;
 }
 
-// Respuesta después de subir un archivo CSV
+// Confirmacion por subir archivo
 message UploadResponse {
   int64 id = 1; // ID del dataset guardado en la base de datos
-  string message = 2; // Mensaje de confirmación
+  string message = 2; // confirmación
 }
 
-// Solicitud para obtener el resumen de un dataset
+// para interactuar con un dataset
 message DatasetRequest {
   int64 id = 1; // ID del dataset
 }
 
 // Respuesta con el resumen del dataset
 message SummaryResponse {
-  string summary_data = 1; // El resumen de pandas.describe() en formato string (ej. JSON)
+  string summary_data = 1; // El resumen de pandas.describe() en formato JSON
 }
 
 // Información de un dataset guardado
 message DatasetInfo {
   int64 id = 1; // ID del dataset
   string name = 2; // Nombre original del archivo
-  string created_at = 3; // Fecha de creación (ej. "YYYY-MM-DD HH:MM:SS")
+  string created_at = 3; // Fecha de creación
 }
 
 // Respuesta con la lista de datasets guardados
 message DatasetListResponse {
   repeated DatasetInfo datasets = 1;
+}
+
+// request for a chart with specific axis, names need to be columns of the CSV in ID
+message ChartRequest {
+  int64 id = 1; // dataset id
+  string x_axis = 2; // name of CSV column for x axis
+  string y_axis = 3; // name of CSV column for y axis
+}
+
+// response with an SVG string fo the server
+message ChartResponse {
+  string svg = 1; // SVG string of the generated graph
 }
 
 // Servicio gRPC para el análisis de datos
@@ -46,4 +58,13 @@ service AidsService {
 
   // Obtiene la lista de todos los datasets guardados
   rpc ListSavedDatasets (google.protobuf.Empty) returns (DatasetListResponse);
+
+  // Borra un dataset
+  rpc DeleteDataset (DatasetRequest) returns (google.protobuf.Empty);
+
+  // Para descargar un dataset
+  rpc DownloadDataset (DatasetRequest) returns (Chunk);
+
+  // For getting a chart with specific fields
+  rpc GetChart (ChartRequest) returns (ChartResponse);
 }
